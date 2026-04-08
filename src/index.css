@@ -6,8 +6,8 @@
   --font-serif: "Playfair Display", serif;
   --color-brand-pink: #db2777; /* pink-600 */
   --color-brand-pink-hover: #be185d; /* pink-700 */
-  --color-dark-bg: #222222;
-  --color-dark-surface: #2c2c2c;
+  --color-dark-bg: #1a1a1a;
+  --color-dark-surface: #222222;
 }
 
 @layer base {

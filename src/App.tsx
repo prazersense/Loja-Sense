@@ -38,25 +38,25 @@ const produtos = [
 const kitsEspeciais = [
   {
     id: 101,
-    nome: "Kit Noite de Gala",
-    precoFormatado: "R$ 549,90",
-    imageUrl: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=800&auto=format&fit=crop",
+    nome: "Kit Iniciante",
+    precoFormatado: "R$ 89,90",
+    imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/kit-iniciante.png",
     checkoutUrlYampi: "#",
-    tag: "Kit Luxo"
+    tag: "Essencial"
   },
   {
     id: 102,
-    nome: "Duo Sensorial",
-    precoFormatado: "R$ 329,00",
-    imageUrl: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?q=80&w=800&auto=format&fit=crop",
+    nome: "Kit Sado",
+    precoFormatado: "R$ 119,90",
+    imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/kit-sado.png",
     checkoutUrlYampi: "#",
     tag: "Mais Vendido"
   },
   {
     id: 103,
-    nome: "Ritual de Autocuidado",
-    precoFormatado: "R$ 419,00",
-    imageUrl: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=800&auto=format&fit=crop",
+    nome: "Kit Cool",
+    precoFormatado: "R$ 99,90",
+    imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/kit-cool.png",
     checkoutUrlYampi: "#",
     tag: "Exclusivo"
   }
