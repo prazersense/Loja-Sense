@@ -188,21 +188,21 @@ const Hero = () => {
     <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden bg-texture">
       <div className="premium-glow -top-40 -left-40 opacity-80" />
       <div className="premium-glow bottom-0 right-0 opacity-40 bg-white/5" style={{ background: 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%)' }} />
-      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center relative z-10">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-2 items-center relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="z-10 order-1"
+          className="z-10 order-1 text-center md:text-left"
         >
-          <span className="inline-block px-4 py-1.5 bg-brand-pink/10 text-brand-pink text-xs font-bold tracking-widest uppercase rounded-full mb-8 border border-brand-pink/20">
+          <span className="hidden md:inline-block px-4 py-1.5 bg-brand-pink/10 text-brand-pink text-xs font-bold tracking-widest uppercase rounded-full mb-8 border border-brand-pink/20">
             Experiência Sensorial
           </span>
           <h1 className="text-5xl md:text-8xl font-extrabold text-white leading-[1] mb-8 tracking-tighter font-serif-premium italic">
             O Luxo do <br />
             <span className="text-brand-pink not-italic">Seu Prazer.</span>
           </h1>
-          <p className="text-xl text-gray-400 max-w-md mb-12 leading-relaxed font-medium">
+          <p className="text-m text-gray-400 max-w-md mx-auto md:mx-0 mb-10 leading-relaxed font-medium">
             Curadoria exclusiva de bem-estar e sofisticação. Descubra novas sensações com a máxima elegância e discrição.
           </p>
           <div className="hidden md:flex flex-col sm:flex-row gap-6">
