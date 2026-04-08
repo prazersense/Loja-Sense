@@ -193,7 +193,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="z-10"
+          className="z-10 order-1"
         >
           <span className="inline-block px-4 py-1.5 bg-brand-pink/10 text-brand-pink text-xs font-bold tracking-widest uppercase rounded-full mb-8 border border-brand-pink/20">
             Experiência Sensorial
@@ -205,18 +205,18 @@ const Hero = () => {
           <p className="text-xl text-gray-400 max-w-md mb-12 leading-relaxed font-medium">
             Curadoria exclusiva de bem-estar e sofisticação. Descubra novas sensações com a máxima elegância e discrição.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6">
+          <div className="hidden md:flex flex-col sm:flex-row gap-6">
             <a 
               href="#produtos"
-              className="px-10 py-5 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all flex items-center justify-center gap-3 group shadow-xl shadow-white/5"
+              className="px-10 py-5 bg-brand-pink text-white font-bold rounded-full hover:bg-brand-pink-hover transition-all flex items-center justify-center gap-3 group shadow-xl shadow-brand-pink/20"
             >
-              Explorar Coleção
+              Explorar agora
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
         </motion.div>
 
-        <div className="relative group">
+        <div className="relative group order-2">
           <div className="aspect-[4/5] rounded-[2rem] overflow-hidden premium-shadow border border-white/5 relative bg-dark-surface">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.img
@@ -261,6 +261,17 @@ const Hero = () => {
                 />
               ))}
             </div>
+          </div>
+          
+          {/* Mobile Button - Below Slider */}
+          <div className="mt-12 md:hidden flex flex-col gap-6">
+            <a 
+              href="#produtos"
+              className="px-10 py-5 bg-brand-pink text-white font-bold rounded-full hover:bg-brand-pink-hover transition-all flex items-center justify-center gap-3 group shadow-xl shadow-brand-pink/20"
+            >
+              Explorar agora
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
           </div>
           
           {/* Decorative Glows */}
@@ -314,7 +325,7 @@ const ProductCard = ({ produto }: any) => {
 
 const PrazerPremium = () => (
   <section id="produtos" className="py-32 bg-dark-bg relative overflow-hidden">
-    <div className="premium-glow -top-40 -right-40 opacity-60" />
+    <div className="premium-glow -top-40 -right-40 opacity-80" />
     <div className="premium-glow -bottom-40 -left-40 opacity-30 bg-white/5" style={{ background: 'radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%)' }} />
     <div className="max-w-7xl mx-auto px-6 relative z-10">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
@@ -474,6 +485,9 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="h-px w-full bg-linear-to-r from-transparent via-white/30 to-transparent" />
+        </div>
         <PrazerPremium />
         <AboutUs />
         <KitsEspeciais />
