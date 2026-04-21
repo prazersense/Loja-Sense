@@ -11,25 +11,25 @@ import { useState, useEffect } from "react";
 const produtos = [
   {
     id: 1,
-    nome: "Aura Silk - Massageador Premium",
-    precoFormatado: "R$ 289,90",
-    imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=800&auto=format&fit=crop",
+    nome: "Sense Wave",
+    precoFormatado: "R$ 99,00",
+    imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/wave-product.jpg",
     checkoutUrlYampi: "#",
-    tag: "Best Seller"
+    tag: "Mais vendido"
   },
   {
     id: 2,
-    nome: "Luna Mist - Difusor de Bem-estar",
-    precoFormatado: "R$ 197,00",
-    imageUrl: "https://images.unsplash.com/photo-1602928321679-560bb453f190?q=80&w=800&auto=format&fit=crop",
+    nome: "Sense Connect",
+    precoFormatado: "R$ 129,90",
+    imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/connect-product.jpg",
     checkoutUrlYampi: "#",
     tag: "Novo"
   },
   {
     id: 3,
-    nome: "Velvet Touch - Óleo Corporal",
-    precoFormatado: "R$ 89,90",
-    imageUrl: "https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?q=80&w=800&auto=format&fit=crop",
+    nome: "Sense Sugar",
+    precoFormatado: "R$ 109,90",
+    imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/sugar-product.jpg",
     checkoutUrlYampi: "#",
     tag: "Essencial"
   }
@@ -42,7 +42,7 @@ const kitsEspeciais = [
     precoFormatado: "R$ 89,90",
     imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/kit-iniciante.png",
     checkoutUrlYampi: "#",
-    tag: "Essencial"
+    tag: "Mais vendido"
   },
   {
     id: 102,
@@ -50,7 +50,7 @@ const kitsEspeciais = [
     precoFormatado: "R$ 119,90",
     imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/kit-sado.png",
     checkoutUrlYampi: "#",
-    tag: "Mais Vendido"
+    tag: "Exclusivo"
   },
   {
     id: 103,
@@ -58,7 +58,7 @@ const kitsEspeciais = [
     precoFormatado: "R$ 99,90",
     imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/kit-cool.png",
     checkoutUrlYampi: "#",
-    tag: "Exclusivo"
+    tag: "Essencial"
   }
 ];
 
