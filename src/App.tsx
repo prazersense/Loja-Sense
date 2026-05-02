@@ -499,9 +499,18 @@ const Accordion: React.FC<{title: string, content: string}> = ({ title, content 
 };
 
 const ProductPage = () => {
-  const [mainImage, setMainImage] = useState(productWave.images[0]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const mainImage = productWave.images[currentIndex];
+
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % productWave.images.length);
+    }, 4000);
+    return () => clearInterval(timer);
   }, []);
 
   const handleAddToCart = () => {
@@ -517,15 +526,47 @@ const ProductPage = () => {
   };
   
   return (
-    <div id="product-top" className="pt-48 pb-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 relative z-10">
+    <div id="product-top" className="pt-32 md:pt-48 pb-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 md:gap-16 relative z-10">
+      
+      {/* Title & Tags Mobile Only */}
+      <div className="md:hidden flex flex-col pt-4 order-1">
+          <div className="mb-4 flex gap-3 flex-wrap">
+              {productWave.tags.map((tag, idx) => {
+                 let Icon = Check;
+                 if (tag.includes("água")) Icon = Droplets;
+                 else if (tag.includes("Recarregável")) Icon = BatteryCharging;
+                 else if (tag.includes("potente")) Icon = Feather;
+                 return (
+                   <span key={idx} className="flex items-center gap-1.5 text-[11px] font-semibold text-gray-300 bg-white/5 px-2.5 py-1 rounded-full border border-white/10 whitespace-nowrap">
+                      <Icon className="w-3.5 h-3.5 text-brand-pink" />
+                      {tag}
+                   </span>
+                 );
+              })}
+          </div>
+          <h1 className="text-4xl font-extrabold text-white tracking-tight">{productWave.title}</h1>
+      </div>
+
       {/* Left Column - Slider */}
-      <div className="space-y-4">
+      <div className="space-y-4 order-2 md:order-none">
          <div className="aspect-square rounded-3xl overflow-hidden bg-dark-surface border border-white/5 relative group premium-shadow">
-            <img src={mainImage} className="w-full h-full object-cover" alt={productWave.title} referrerPolicy="no-referrer" />
+            <AnimatePresence mode="wait">
+              <motion.img 
+                key={mainImage}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                src={mainImage} 
+                className="w-full h-full object-cover absolute inset-0" 
+                alt={productWave.title} 
+                referrerPolicy="no-referrer" 
+              />
+            </AnimatePresence>
          </div>
          <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
             {productWave.images.map((img, idx) => (
-              <button key={idx} onClick={() => setMainImage(img)} className={`flex-shrink-0 w-24 aspect-square rounded-2xl overflow-hidden border-2 transition-all ${mainImage === img ? 'border-brand-pink' : 'border-transparent opacity-50 hover:opacity-100'}`}>
+              <button key={idx} onClick={() => setCurrentIndex(idx)} className={`flex-shrink-0 w-20 md:w-24 aspect-square rounded-2xl overflow-hidden border-2 transition-all ${mainImage === img ? 'border-brand-pink' : 'border-transparent opacity-50 hover:opacity-100'}`}>
                  <img src={img} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </button>
             ))}
@@ -533,8 +574,8 @@ const ProductPage = () => {
       </div>
       
       {/* Right Column - Info */}
-      <div className="flex flex-col">
-          <div className="mb-6 flex gap-3 flex-wrap">
+      <div className="flex flex-col order-3 md:order-none mt-4 md:mt-0">
+          <div className="hidden md:flex mb-6 gap-3 flex-wrap">
               {productWave.tags.map((tag, idx) => {
                  let Icon = Check;
                  if (tag.includes("água")) Icon = Droplets;
@@ -549,7 +590,7 @@ const ProductPage = () => {
               })}
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">{productWave.title}</h1>
+          <h1 className="hidden md:block text-5xl font-extrabold text-white mb-4 tracking-tight">{productWave.title}</h1>
           <p className="text-lg text-gray-400 leading-relaxed font-medium mb-8 pb-8 border-b border-white/10">
             {productWave.subtitle}
           </p>
@@ -608,7 +649,7 @@ const faqs = [
 
 const ProductFeatures = () => (
   <section 
-    className="py-32 bg-[#fafafa] text-gray-900 relative -mt-4 border-t border-gray-200"
+    className="py-32 bg-[#fafafa] text-gray-900 relative -mt-4 border-t border-gray-200 overflow-hidden"
     style={{ backgroundImage: 'radial-gradient(rgba(0,0,0,0.03) 2px, transparent 2px)', backgroundSize: '32px 32px' }}
   >
     <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -688,7 +729,7 @@ const ProductFeatures = () => (
 );
 
 const FAQSection = () => (
-  <section className="py-32 relative text-white bg-dark-bg bg-texture border-t border-white/5">
+  <section className="py-32 relative text-white bg-dark-bg bg-texture border-t border-white/5 overflow-hidden">
     <div className="premium-glow -top-40 -right-40 opacity-30" />
     <div className="max-w-4xl mx-auto px-6">
       <div className="text-center mb-16 relative z-10 max-w-2xl mx-auto">
@@ -826,7 +867,7 @@ export default function App() {
   const renderContent = () => {
     if (currentHash === "#product-sense-wave") {
       return (
-        <main>
+        <main className="overflow-x-hidden">
           <ProductPage />
           <ProductFeatures />
           <FAQSection />
@@ -835,7 +876,7 @@ export default function App() {
     }
 
     return (
-      <main>
+      <main className="overflow-x-hidden">
         <Hero />
         <div className="max-w-7xl mx-auto px-6">
           <div className="h-px w-full bg-linear-to-r from-transparent via-white/30 to-transparent" />
