@@ -529,7 +529,7 @@ const ProductPage = () => {
     <div id="product-top" className="pt-32 md:pt-48 pb-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 md:gap-16 relative z-10">
       
       {/* Title & Tags Mobile Only */}
-      <div className="md:hidden flex flex-col pt-4 order-1">
+      <div className="md:hidden flex flex-col pt-4 order-1 min-w-0 w-full">
           <div className="mb-4 flex gap-3 flex-wrap">
               {productWave.tags.map((tag, idx) => {
                  let Icon = Check;
@@ -548,7 +548,7 @@ const ProductPage = () => {
       </div>
 
       {/* Left Column - Slider */}
-      <div className="space-y-4 order-2 md:order-none">
+      <div className="space-y-4 order-2 md:order-none min-w-0 w-full">
          <div className="aspect-square rounded-3xl overflow-hidden bg-dark-surface border border-white/5 relative group premium-shadow">
             <AnimatePresence mode="wait">
               <motion.img 
@@ -574,7 +574,7 @@ const ProductPage = () => {
       </div>
       
       {/* Right Column - Info */}
-      <div className="flex flex-col order-3 md:order-none mt-4 md:mt-0">
+      <div className="flex flex-col order-3 md:order-none mt-4 md:mt-0 min-w-0 w-full">
           <div className="hidden md:flex mb-6 gap-3 flex-wrap">
               {productWave.tags.map((tag, idx) => {
                  let Icon = Check;
@@ -867,7 +867,7 @@ export default function App() {
   const renderContent = () => {
     if (currentHash === "#product-sense-wave") {
       return (
-        <main className="overflow-x-hidden">
+        <main className="overflow-x-hidden w-full">
           <ProductPage />
           <ProductFeatures />
           <FAQSection />
@@ -876,7 +876,7 @@ export default function App() {
     }
 
     return (
-      <main className="overflow-x-hidden">
+      <main className="overflow-x-hidden w-full">
         <Hero />
         <div className="max-w-7xl mx-auto px-6">
           <div className="h-px w-full bg-linear-to-r from-transparent via-white/30 to-transparent" />
