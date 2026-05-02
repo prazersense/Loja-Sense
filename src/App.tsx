@@ -4,8 +4,17 @@
  */
 
 import { motion, AnimatePresence } from "motion/react";
-import { ShoppingBag, ShieldCheck, Truck, Headphones, Menu, X, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ShoppingBag, ShieldCheck, Truck, Headphones, Menu, X, ArrowRight, ChevronLeft, ChevronRight, Check, Plus, Minus, BatteryCharging, Feather, Droplets } from "lucide-react";
+import React, { useState, useEffect } from "react";
+
+// --- Types ---
+type CartItem = {
+  id: number | string;
+  nome: string;
+  precoFormatado: string;
+  imagem: string;
+  quantidade: number;
+};
 
 // --- Data ---
 const produtos = [
@@ -14,7 +23,7 @@ const produtos = [
     nome: "Sense Wave",
     precoFormatado: "R$ 99,00",
     imageUrl: "https://prazer-sense.sirv.com/Loja%20Online%20Sense/wave-product.jpg",
-    checkoutUrlYampi: "#",
+    checkoutUrlYampi: "#product-sense-wave",
     tag: "Mais vendido"
   },
   {
@@ -96,12 +105,14 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Left */}
         <div className="flex-shrink-0">
-          <img 
-            src="https://prazer-sense.sirv.com/Loja%20Online%20Sense/(575x230px)-logotipo%20copiar-2.png" 
-            alt="SenseMagic Logo" 
-            className="h-10 md:h-12 w-auto object-contain"
-            referrerPolicy="no-referrer"
-          />
+          <a href="#">
+            <img 
+              src="https://prazer-sense.sirv.com/Loja%20Online%20Sense/(575x230px)-logotipo%20copiar-2.png" 
+              alt="SenseMagic Logo" 
+              className="h-10 md:h-12 w-auto object-contain"
+              referrerPolicy="no-referrer"
+            />
+          </a>
         </div>
 
         {/* Desktop Menu Center */}
@@ -113,15 +124,28 @@ const Navbar = () => {
 
         {/* Right Icons */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="p-2 hover:bg-white/5 rounded-full transition-colors">
+          <button 
+            className="p-2 hover:bg-white/5 rounded-full transition-colors relative"
+            onClick={() => window.dispatchEvent(new CustomEvent('toggleCart'))}
+          >
             <ShoppingBag className="w-5 h-5 text-white" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-brand-pink rounded-full" id="cart-badge" style={{ display: 'none' }}></span>
           </button>
         </div>
 
-        {/* Mobile Toggle */}
-        <button className="md:hidden p-2 text-white" onClick={() => setIsOpen(!isOpen)}>
-          {isOpen ? <X /> : <Menu />}
-        </button>
+        {/* Mobile Toggle & Cart */}
+        <div className="md:hidden flex items-center gap-4">
+          <button 
+            className="p-2 text-white relative"
+            onClick={() => window.dispatchEvent(new CustomEvent('toggleCart'))}
+          >
+            <ShoppingBag className="w-5 h-5" />
+            <span className="absolute top-0 right-0 w-2 h-2 bg-brand-pink rounded-full" id="cart-badge-mobile" style={{ display: 'none' }}></span>
+          </button>
+          <button className="p-2 text-white" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -434,6 +458,263 @@ const Benefits = () => (
   </section>
 );
 
+const productWave = {
+  images: [
+    "https://prazer-sense.sirv.com/Loja%20Online%20Sense/Produtos/001.jpg",
+    "https://prazer-sense.sirv.com/Loja%20Online%20Sense/Produtos/002.jpg",
+    "https://prazer-sense.sirv.com/Loja%20Online%20Sense/Produtos/003.jpg",
+    "https://prazer-sense.sirv.com/Loja%20Online%20Sense/Produtos/004.jpg"
+  ],
+  title: "Sense Wave",
+  subtitle: "10 modos de vibração, potência sem igual e silêncio absoluto. Recarregável, discreto e feito pra te fazer bem.",
+  tags: ["A prova d'água", "Recarregável", "Leve e potente"],
+  price: "R$99",
+  checkoutUrl: "https://sense-magic-toys.pay.yampi.com.br/r/DUFMA932PV",
+  promoText: "Frete grátis acima de R$299",
+  accordions: [
+    { title: "O que torna especial?", content: "O Wave não é qualquer varinha, é o modelo mais vendido do mundo por um bom motivo. Feito com silicone de toque aveludado e carcaça ABS ultradurável, ele combina potência de verdade com um silêncio que só você vai saber. São 10 modos de vibração para você descobrir o que o seu corpo ama (de um jeito suave até aquele que faz esquecer o nome.)" },
+    { title: "Como uso esse produto?", content: "Simples: carregue via USB (notebook, PC ou carregador de celular) e em 2 a 3 horas ele está pronto pra agir. Com 20 cm de comprimento e cabeça flexível que se adapta ao corpo, o Wave alcança exatamente onde você quer, seja para massagem relaxante ou estimulação intima. Escolha um dos 10 modos, encontre o seu favorito e aproveite." },
+    { title: "Seus diferenciais", content: "Recarregável via USB, sem pilha, sem interrupção na hora errada. Silencioso de verdade, porque prazer discreto não precisa de explicação. Feito com silicone aveludado de toque suave, com 10 modos de vibração para você descobrir (e redescobrir) o que te dá prazer. E com entrega 100% discreta, sem identificação do produto na embalagem ou na nota fiscal, só você sabe o que chegou." }
+  ],
+  bottomDescription: "Sua varinha, suas regras. O Sense Wave entrega vibrações potentes e silenciosas em 10 modos diferentes, para você explorar o próprio corpo no seu ritmo, sem fio, sem pilha e sem julgamento."
+};
+
+const Accordion: React.FC<{title: string, content: string}> = ({ title, content }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border-b border-white/10 py-4">
+      <button className="flex w-full justify-between items-center text-left text-white font-semibold group" onClick={() => setIsOpen(!isOpen)}>
+        <span className="group-hover:text-brand-pink transition-colors">{title}</span>
+        {isOpen ? <Minus className="w-5 h-5 text-gray-400 group-hover:text-brand-pink transition-colors" /> : <Plus className="w-5 h-5 text-gray-400 group-hover:text-brand-pink transition-colors" />}
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+             <p className="pt-4 text-gray-400 text-sm leading-relaxed">{content}</p>
+           </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+};
+
+const ProductPage = () => {
+  const [mainImage, setMainImage] = useState(productWave.images[0]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleAddToCart = () => {
+    window.dispatchEvent(new CustomEvent('addToCart', { 
+      detail: {
+        id: 'wave-01',
+        nome: productWave.title,
+        precoFormatado: productWave.price,
+        imagem: productWave.images[0],
+        quantidade: 1
+      }
+    }));
+  };
+  
+  return (
+    <div id="product-top" className="pt-48 pb-24 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 relative z-10">
+      {/* Left Column - Slider */}
+      <div className="space-y-4">
+         <div className="aspect-square rounded-3xl overflow-hidden bg-dark-surface border border-white/5 relative group premium-shadow">
+            <img src={mainImage} className="w-full h-full object-cover" alt={productWave.title} referrerPolicy="no-referrer" />
+         </div>
+         <div className="flex gap-4 overflow-x-auto pb-2 custom-scrollbar">
+            {productWave.images.map((img, idx) => (
+              <button key={idx} onClick={() => setMainImage(img)} className={`flex-shrink-0 w-24 aspect-square rounded-2xl overflow-hidden border-2 transition-all ${mainImage === img ? 'border-brand-pink' : 'border-transparent opacity-50 hover:opacity-100'}`}>
+                 <img src={img} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              </button>
+            ))}
+         </div>
+      </div>
+      
+      {/* Right Column - Info */}
+      <div className="flex flex-col">
+          <div className="mb-6 flex gap-3 flex-wrap">
+              {productWave.tags.map((tag, idx) => {
+                 let Icon = Check;
+                 if (tag.includes("água")) Icon = Droplets;
+                 else if (tag.includes("Recarregável")) Icon = BatteryCharging;
+                 else if (tag.includes("potente")) Icon = Feather;
+                 return (
+                   <span key={idx} className="flex items-center gap-2 text-xs font-semibold text-gray-300 bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+                      <Icon className="w-4 h-4 text-brand-pink" />
+                      {tag}
+                   </span>
+                 );
+              })}
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">{productWave.title}</h1>
+          <p className="text-lg text-gray-400 leading-relaxed font-medium mb-8 pb-8 border-b border-white/10">
+            {productWave.subtitle}
+          </p>
+          
+          <div className="flex flex-col gap-4 mb-4">
+            <a href={productWave.checkoutUrl} target="_blank" rel="noopener noreferrer" className="w-full py-4 px-8 bg-brand-pink text-white font-bold rounded-full hover:bg-brand-pink-hover transition-all flex items-center justify-center text-lg shadow-lg shadow-brand-pink/20">
+              {productWave.price} <span className="mx-2 opacity-50">|</span> Comprar Agora
+            </a>
+            <button 
+              onClick={handleAddToCart}
+              className="w-full py-4 px-8 bg-white/5 border border-white/10 text-white font-bold rounded-full hover:bg-white/10 transition-all flex items-center justify-center text-lg"
+            >
+              Adicionar ao Carrinho
+            </button>
+          </div>
+          <div className="text-center text-sm font-medium text-brand-pink flex items-center justify-center gap-2 mb-10">
+            <Truck className="w-4 h-4" /> {productWave.promoText}
+          </div>
+          
+          <div className="space-y-2 mb-8">
+             {productWave.accordions.map((acc, idx) => (
+                 <Accordion key={idx} title={acc.title} content={acc.content} />
+             ))}
+          </div>
+          
+          <p className="text-base text-white font-medium leading-relaxed bg-white/5 p-6 rounded-2xl border border-white/5">
+            {productWave.bottomDescription}
+          </p>
+      </div>
+    </div>
+  )
+};
+
+const faqs = [
+  {
+    title: "O Wave é silencioso mesmo?",
+    content: "Sim! O motor do Wave foi projetado pra ser potente e silencioso ao mesmo tempo. Você aproveita cada momento sem se preocupar com quem está do lado de fora."
+  },
+  {
+    title: "Como faço pra carregar?",
+    content: "Simples: conecte o cabo USB que acompanha o produto em qualquer fonte (notebook, PC ou carregador de celular). Em 2 a 3 horas ele está com a bateria cheia e pronto pra usar."
+  },
+  {
+    title: "Posso usar no banho?",
+    content: "Pode sim! O Wave é à prova d'água, então banho, banheira ou onde a imaginação levar, ele acompanha você sem problema nenhum."
+  },
+  {
+    title: "A embalagem chega discreta?",
+    content: "Sempre. Enviamos em caixa lacrada sem nenhuma identificação do produto por fora. Ninguém além de você precisa saber o que chegou, essa parte é só sua."
+  },
+  {
+    title: "Tive um problema, como falo com vocês?",
+    content: "A gente está aqui! É só chamar no nosso WhatsApp e a nossa equipe te responde rapidinho. Seja pra tirar uma dúvida antes de comprar ou resolver qualquer coisa depois, estamos sempre prontos pra te ajudar."
+  }
+];
+
+const ProductFeatures = () => (
+  <section 
+    className="py-32 bg-[#fafafa] text-gray-900 relative -mt-4 border-t border-gray-200"
+    style={{ backgroundImage: 'radial-gradient(rgba(0,0,0,0.03) 2px, transparent 2px)', backgroundSize: '32px 32px' }}
+  >
+    <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="text-center mb-16 max-w-4xl mx-auto">
+        <h2 className="text-4xl md:text-5xl lg:text-5xl font-extrabold mb-6 tracking-tight text-gray-900 leading-tight">
+          O prazer que <span className="text-brand-pink">você merecia</span><br />ter encontrado antes.
+        </h2>
+        <p className="text-gray-500 text-lg md:text-xl font-medium max-w-2xl mx-auto">
+          O Wave foi criado pra quem quer qualidade, discrição e potência (tudo no mesmo lugar)
+        </p>
+      </div>
+      
+      <div className="grid md:grid-cols-2 gap-12 md:gap-20 items-center relative z-20">
+        
+        {/* Left Image */}
+        <div className="order-1 md:order-1 flex justify-center relative z-0">
+           {/* Glow behind image - weaker opacity */}
+           <div 
+             className="absolute inset-0 w-[140%] h-[140%] -left-[20%] -top-[20%] rounded-full -z-10" 
+             style={{ background: 'radial-gradient(circle, rgba(219, 39, 119, 0.15) 0%, transparent 65%)' }}
+           ></div>
+           
+           <img 
+              src="https://prazer-sense.sirv.com/Loja%20Online%20Sense/Produtos/wave-transparent.png" 
+              alt="Sense Wave" 
+              className="w-full max-w-[280px] md:max-w-[420px] object-contain drop-shadow-2xl relative z-10 hover:scale-105 transition-transform duration-700" 
+           />
+        </div>
+        
+        {/* Right Features */}
+        <div className="flex flex-col gap-6 text-left order-2 md:order-2 relative z-10 w-full max-w-lg mx-auto md:mr-auto md:ml-0">
+          <div className="bg-white/90 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-md transition-all group border border-pink-100">
+            <div className="flex items-center gap-4 mb-4">
+               <span className="p-3 bg-brand-pink/10 rounded-full text-brand-pink shadow-sm">
+                 <BatteryCharging className="w-6 h-6" />
+               </span>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-800">Recarregável via USB</h3>
+            </div>
+            <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+              Chega de pilha acabando na hora errada. O Wave carrega em qualquer USB (notebook, PC ou carregador de celular 5V) e em até 2 horas está pronto pra uma sessão completa.
+            </p>
+          </div>
+          
+          <div className="bg-white/90 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-md transition-all group border border-pink-100">
+            <div className="flex items-center gap-4 mb-4">
+               <span className="p-3 bg-brand-pink/10 rounded-full text-brand-pink shadow-sm">
+                 <Feather className="w-6 h-6" />
+               </span>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-800">Textura Soft Touch</h3>
+            </div>
+            <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+              O silicone aveludado do Wave foi escolhido a dedo: macio, hipoalergênico e com um toque tão suave que parece feito pra você. Prazer que começa antes mesmo de ligar.
+            </p>
+          </div>
+          
+          <div className="bg-white/90 backdrop-blur-md p-8 md:p-10 rounded-3xl shadow-sm hover:shadow-md transition-all group border border-pink-100">
+            <div className="flex items-center gap-4 mb-4">
+               <span className="p-3 bg-brand-pink/10 rounded-full text-brand-pink shadow-sm">
+                 <Droplets className="w-6 h-6" />
+               </span>
+              <h3 className="text-xl md:text-2xl font-bold text-gray-800">À prova d'água</h3>
+            </div>
+            <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+              Banho, banheira ou onde a imaginação mandar. O Wave é à prova d'água, então você leva pra onde quiser sem preocupação (e a limpeza depois fica muito mais fácil também)
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div className="mt-16 text-center relative z-20">
+        <button onClick={(e) => { e.preventDefault(); document.getElementById('product-top')?.scrollIntoView({ behavior: 'smooth' }); }} className="inline-flex items-center justify-center py-4 px-10 bg-brand-pink text-white font-bold rounded-full hover:bg-brand-pink-hover transition-all gap-2 shadow-lg shadow-brand-pink/20 text-lg">
+          Comprar Agora <ArrowRight className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </section>
+);
+
+const FAQSection = () => (
+  <section className="py-32 relative text-white bg-dark-bg bg-texture border-t border-white/5">
+    <div className="premium-glow -top-40 -right-40 opacity-30" />
+    <div className="max-w-4xl mx-auto px-6">
+      <div className="text-center mb-16 relative z-10 max-w-2xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-extrabold mb-6 tracking-tight font-serif-premium">
+          Ficou alguma dúvida?
+        </h2>
+        <p className="text-gray-400 text-lg leading-relaxed font-medium">
+          A gente sabe que comprar pela primeira vez pode gerar uma pergunta ou outra (e tá tudo bem). Reunimos aqui as dúvidas mais comuns pra você comprar com confiança e sem mistério.
+        </p>
+      </div>
+      
+      <div className="flex flex-col relative z-10 bg-dark-surface p-8 md:p-12 rounded-[2rem] border border-white/5 premium-shadow">
+        {faqs.map((faq, index) => (
+          <Accordion key={index} title={faq.title} content={faq.content} />
+        ))}
+      </div>
+      
+      <div className="mt-16 text-center relative z-20">
+        <button onClick={(e) => { e.preventDefault(); document.getElementById('product-top')?.scrollIntoView({ behavior: 'smooth' }); }} className="inline-flex items-center justify-center py-4 px-10 bg-brand-pink text-white font-bold rounded-full hover:bg-brand-pink-hover transition-all gap-2 shadow-lg shadow-brand-pink/20 text-lg">
+          Comprar Agora <ArrowRight className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+  </section>
+);
+
 const Footer = () => (
   <footer className="bg-black text-white py-32 border-t border-white/5">
     <div className="max-w-7xl mx-auto px-6">
@@ -480,9 +761,80 @@ const Footer = () => (
 );
 
 export default function App() {
-  return (
-    <div className="min-h-screen selection:bg-brand-pink selection:text-white bg-dark-bg bg-texture">
-      <Navbar />
+  const [currentHash, setCurrentHash] = useState(() => window.location.hash || "");
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    const updateBadge = () => {
+      const badge = document.getElementById('cart-badge');
+      const mobileBadge = document.getElementById('cart-badge-mobile');
+      const hasItems = cartItems.length > 0;
+      if (badge) badge.style.display = hasItems ? 'block' : 'none';
+      if (mobileBadge) mobileBadge.style.display = hasItems ? 'block' : 'none';
+    };
+    updateBadge();
+  }, [cartItems]);
+
+  useEffect(() => {
+    const handleToggleCart = () => setIsCartOpen(prev => !prev);
+    const handleAddToCart = (e: Event) => {
+      const customEvent = e as CustomEvent<CartItem>;
+      setCartItems(prev => {
+        const existing = prev.find(item => item.id === customEvent.detail.id);
+        if (existing) {
+          return prev.map(item => item.id === customEvent.detail.id ? { ...item, quantidade: item.quantidade + 1 } : item);
+        }
+        return [...prev, customEvent.detail];
+      });
+      setIsCartOpen(true);
+    };
+
+    window.addEventListener('toggleCart', handleToggleCart);
+    window.addEventListener('addToCart', handleAddToCart);
+
+    return () => {
+      window.removeEventListener('toggleCart', handleToggleCart);
+      window.removeEventListener('addToCart', handleAddToCart);
+    };
+  }, []);
+
+  const updateQuantity = (id: string | number, delta: number) => {
+    setCartItems(prev => prev.map(item => {
+      if (item.id === id) {
+        const newQuantity = item.quantidade + delta;
+        return newQuantity > 0 ? { ...item, quantidade: newQuantity } : item;
+      }
+      return item;
+    }).filter(item => item.quantidade > 0));
+  };
+
+  const removeItem = (id: string | number) => {
+    setCartItems(prev => prev.filter(item => item.id !== id));
+  };
+
+
+  useEffect(() => {
+    const onHashChange = () => {
+      setCurrentHash(window.location.hash);
+      // Let the browser handle standard hash scrolling unless it's a "page"
+    };
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
+  }, []);
+
+  const renderContent = () => {
+    if (currentHash === "#product-sense-wave") {
+      return (
+        <main>
+          <ProductPage />
+          <ProductFeatures />
+          <FAQSection />
+        </main>
+      );
+    }
+
+    return (
       <main>
         <Hero />
         <div className="max-w-7xl mx-auto px-6">
@@ -493,7 +845,102 @@ export default function App() {
         <KitsEspeciais />
         <Benefits />
       </main>
+    );
+  };
+
+  return (
+    <div className="min-h-screen selection:bg-brand-pink selection:text-white bg-dark-bg bg-texture">
+      <Navbar />
+      
+      {/* Cart Drawer Overlay */}
+      <AnimatePresence>
+        {isCartOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
+              onClick={() => setIsCartOpen(false)}
+            />
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-full max-w-md bg-dark-surface border-l border-white/5 z-[70] shadow-2xl flex flex-col"
+            >
+              <div className="p-6 border-b border-white/5 flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white font-serif-premium">Seu Carrinho</h2>
+                <button onClick={() => setIsCartOpen(false)} className="p-2 text-gray-400 hover:text-white transition-colors">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 custom-scrollbar">
+                {cartItems.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
+                    <ShoppingBag className="w-16 h-16 mb-4 opacity-20" />
+                    <p>Seu carrinho está vazio.</p>
+                    <button onClick={() => setIsCartOpen(false)} className="mt-4 text-brand-pink font-semibold hover:underline">
+                      Continuar explorando
+                    </button>
+                  </div>
+                ) : (
+                  cartItems.map((item) => (
+                    <div key={item.id} className="flex gap-4 bg-dark-bg p-4 rounded-2xl border border-white/5">
+                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-black flex-shrink-0">
+                        <img src={item.imagem} alt={item.nome} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex flex-col flex-1 justify-between py-1">
+                        <div className="flex justify-between items-start">
+                          <h4 className="text-white font-semibold text-sm line-clamp-2 pr-4">{item.nome}</h4>
+                          <button onClick={() => removeItem(item.id)} className="text-gray-500 hover:text-brand-pink text-xs transition-colors p-1 -mt-1 -mr-1">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="flex justify-between items-end mt-2">
+                          <span className="text-brand-pink font-bold">{item.precoFormatado}</span>
+                          <div className="flex items-center gap-3 bg-dark-surface rounded-full px-3 py-1 border border-white/5">
+                            <button onClick={() => updateQuantity(item.id, -1)} className="text-gray-400 hover:text-white">
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="text-sm font-medium text-white min-w-[12px] text-center">{item.quantidade}</span>
+                            <button onClick={() => updateQuantity(item.id, 1)} className="text-gray-400 hover:text-white">
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {cartItems.length > 0 && (
+                <div className="p-6 border-t border-white/5 bg-dark-surface">
+                  <div className="flex justify-between items-center mb-6 text-lg">
+                    <span className="text-gray-400">Total estimado</span>
+                    <span className="text-white font-bold font-serif-premium">
+                      R$ {cartItems.reduce((acc, item) => {
+                        const price = parseFloat(item.precoFormatado.replace('R$', '').replace(',', '.'));
+                        return acc + (price * item.quantidade);
+                      }, 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                  <button className="w-full py-4 bg-brand-pink text-white font-bold rounded-full hover:bg-brand-pink-hover transition-all flex items-center justify-center gap-2 shadow-lg shadow-brand-pink/20">
+                    Finalizar Compra <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {renderContent()}
       <Footer />
     </div>
   );
 }
+

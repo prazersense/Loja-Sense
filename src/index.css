@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", serif;
+  --font-serif-alt: "Lora", serif;
   --color-brand-pink: #db2777; /* pink-600 */
   --color-brand-pink-hover: #be185d; /* pink-700 */
   --color-dark-bg: #1a1a1a;
@@ -55,6 +56,10 @@
 
 .font-serif-premium {
   font-family: var(--font-serif);
+}
+
+.font-serif-alt {
+  font-family: var(--font-serif-alt);
 }
 
 .text-gradient {
